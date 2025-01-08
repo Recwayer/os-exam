@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:domain}
+    username: admin
+    password: admin
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
+    virtual-host: /
+  jpa:
+    hibernate:
+      ddl-auto: update
+grpc:
+  port: ${GRPC_PORT:50051}
+server:
+  port: ${SERVER_PORT:8080}
+rabbit:
+  queue: ${RABBIT_QUEUE:eventQueue}

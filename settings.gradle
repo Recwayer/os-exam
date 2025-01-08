@@ -2,6 +2,3 @@ rootProject.name = 'adminka'
 
 include 'gateway'
 include 'domain-service'
-include 'gateway'
-include 'domain-service'
-

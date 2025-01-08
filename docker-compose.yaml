@@ -1,0 +1,145 @@
+version: '3.9'
+
+services:
+  gateway:
+    container_name: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    image: recwayer/gateway:latest
+    ports:
+      - "8082:8082"
+    environment:
+      SERVER_PORT: 8082
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      GRPC_HOST: domain-service
+      GRPC_PORT: 50051
+      RABBIT_QUEUE: eventQueue
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      SPRING_RABBITMQ_VIRTUAL_HOST: /
+    depends_on:
+      - rabbitmq
+      - redis
+      - domain-service
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  domain-service:
+    container_name: domain
+    build:
+      context: ./domain-service
+      dockerfile: Dockerfile
+    image: recwayer/domain:latest
+    ports:
+      - "8080:8080"
+      - "50051:50051"
+    environment:
+      SERVER_PORT: 8080
+      RABBIT_QUEUE: eventQueue
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: domain
+      GRPC_PORT: 50051
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      SPRING_RABBITMQ_VIRTUAL_HOST: /
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: domain
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - "8081:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: admin
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+networks:
+  app-network:
+    driver: bridge
+

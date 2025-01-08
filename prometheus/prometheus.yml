@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s  # Интервал опроса для всех сервисов
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'gateway'  # Название задачи (job) для Gateway сервиса
+    static_configs:
+      - targets:
+          - 'gateway:8082'  # Адрес и порт, где метрики доступны
+    metrics_path: '/actuator/prometheus'  # Путь, по которому доступны метрики
+    scrape_interval: 10s
