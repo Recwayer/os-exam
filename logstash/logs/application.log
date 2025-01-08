@@ -1,0 +1,31 @@
+2025-01-08 05:39:54 [main] INFO  c.example.GatewayServiceApplication - Starting GatewayServiceApplication using Java 17-ea with PID 1 (/app/app.jar started by root in /app)
+2025-01-08 05:39:54 [main] INFO  c.example.GatewayServiceApplication - No active profile set, falling back to 1 default profile: "default"
+2025-01-08 05:39:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2025-01-08 05:39:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2025-01-08 05:39:57 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 70 ms. Found 0 Redis repository interfaces.
+2025-01-08 05:39:58 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8082 (http)
+2025-01-08 05:39:58 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8082"]
+2025-01-08 05:39:58 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-01-08 05:39:58 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.28]
+2025-01-08 05:39:58 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-01-08 05:39:58 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 3606 ms
+2025-01-08 05:40:06 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2025-01-08 05:40:06 [main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8082"]
+2025-01-08 05:40:06 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8082 (http) with context path '/'
+2025-01-08 05:40:06 [main] INFO  c.example.GatewayServiceApplication - Started GatewayServiceApplication in 12.559 seconds (process running for 15.166)
+2025-01-08 05:40:15 [http-nio-8082-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-08 05:40:15 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-01-08 05:40:15 [http-nio-8082-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2025-01-08 05:40:38 [http-nio-8082-exec-4] INFO  c.e.controller.GatewayController - GET request for getting courses with (page: 0, size: 7)
+2025-01-08 05:42:29 [http-nio-8082-exec-9] INFO  c.e.controller.GatewayController - GET request for getting courses with (page: 0, size: 8)
+2025-01-08 05:42:32 [http-nio-8082-exec-10] INFO  c.e.controller.GatewayController - GET request for getting courses with (page: 0, size: 10)
+2025-01-08 05:42:40 [http-nio-8082-exec-3] INFO  c.e.controller.GatewayController - POST request for creating (course: CourseCreateRequest(title=1264365346dgagdasgd3575373, instructor=5435agfhahfsdhfsdhfsdhfsdhsfdh12421412, hours=1235435))
+2025-01-08 05:42:40 [http-nio-8082-exec-3] INFO  o.s.a.r.c.CachingConnectionFactory - Attempting to connect to: [rabbitmq:5672]
+2025-01-08 05:42:40 [http-nio-8082-exec-3] INFO  o.s.a.r.c.CachingConnectionFactory - Created new connection: rabbitConnectionFactory#485451d8:0/SimpleConnection@3bb98fbd [delegate=amqp://guest@172.25.0.5:5672/, localPort=46084]
+2025-01-08 05:42:40 [http-nio-8082-exec-3] INFO  o.s.amqp.rabbit.core.RabbitAdmin - Auto-declaring a non-durable, auto-delete, or exclusive Queue (eventQueue) durable:false, auto-delete:false, exclusive:false. It will be redeclared if the broker stops and is restarted while the connection factory is alive, but all messages will be lost.
+2025-01-08 05:42:40 [http-nio-8082-exec-3] INFO  com.example.rabbit.MessageProducer - Message request sent in rabbit. (Message: Message(operation=CREATE, data=CourseCreateRequest(title=1264365346dgagdasgd3575373, instructor=5435agfhahfsdhfsdhfsdhfsdhsfdh12421412, hours=1235435)))
+2025-01-08 05:43:02 [http-nio-8082-exec-6] INFO  c.e.controller.GatewayController - GET request for getting course with (id: 21)
+2025-01-08 05:43:05 [http-nio-8082-exec-8] INFO  c.e.controller.GatewayController - PATCH request for updating (id: 13, course: CourseDto(id=null, title=1235423, instructor=null, hours=null))
+2025-01-08 05:43:05 [http-nio-8082-exec-8] INFO  com.example.rabbit.MessageProducer - Message request sent in rabbit. (Message: Message(operation=UPDATE, data=CourseDto(id=13, title=1235423, instructor=null, hours=null)))
+2025-01-08 05:43:18 [http-nio-8082-exec-10] INFO  c.e.controller.GatewayController - DELETE request for deleting course with (id: 23)
+2025-01-08 05:43:18 [http-nio-8082-exec-10] INFO  com.example.rabbit.MessageProducer - Message request sent in rabbit. (Message: Message(operation=DELETE, data=23))

@@ -9,6 +9,8 @@ services:
     image: recwayer/gateway:latest
     ports:
       - "8082:8082"
+    volumes:
+      - ./logstash/logs/application.log:/app/logs/application.log
     environment:
       SERVER_PORT: 8082
       SPRING_DATA_REDIS_HOST: redis
@@ -135,6 +137,47 @@ services:
       - prometheus
     networks:
       - app-network
+    restart: unless-stopped
+
+  elasticsearch:
+    image: elasticsearch:7.9.3
+    container_name: elasticsearch
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: false
+    ports:
+      - "9200:9200"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  logstash:
+    image: logstash:7.9.3
+    container_name: logstash
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+      - ./logstash/logs/application.log:/app/logs/application.log
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5044:5044"
+      - "5000:5000"
+      - "9600:9600"
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  kibana:
+    image: kibana:7.9.3
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - app-network
+    depends_on:
+      - elasticsearch
     restart: unless-stopped
 
 volumes:
